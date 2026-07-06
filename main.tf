@@ -159,6 +159,7 @@ resource "azurerm_container_app_job" "container_app_jobs" {
                 }
               }
               custom_rule_type = rules.value.custom_rule_type
+              identity_id      = rules.value.identity_id
               metadata         = rules.value.metadata
               name             = rules.value.name
             }
