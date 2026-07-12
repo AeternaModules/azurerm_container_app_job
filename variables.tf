@@ -329,7 +329,7 @@ EOT
   validation {
     condition = alltrue([
       for k, v in var.container_app_jobs : (
-        v.event_trigger_config.scale == null || alltrue([for item in v.event_trigger_config.scale : (item.authentication == null || (length(item.authentication) >= 1))])
+        v.event_trigger_config == null || (v.event_trigger_config.scale == null || alltrue([for item in v.event_trigger_config.scale : (item.rules == null || alltrue([for item in item.rules : (item.authentication == null || (length(item.authentication) >= 1))]))]))
       )
     ])
     error_message = "Each authentication list must contain at least 1 items"
