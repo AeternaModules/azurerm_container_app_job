@@ -31,7 +31,7 @@ resource "azurerm_container_app_job" "container_app_jobs" {
           content {
             failure_count_threshold = liveness_probe.value.failure_count_threshold
             dynamic "header" {
-              for_each = liveness_probe.value.header != null ? [liveness_probe.value.header] : []
+              for_each = liveness_probe.value.header != null ? liveness_probe.value.header : []
               content {
                 name  = header.value.name
                 value = header.value.value
@@ -53,7 +53,7 @@ resource "azurerm_container_app_job" "container_app_jobs" {
           content {
             failure_count_threshold = readiness_probe.value.failure_count_threshold
             dynamic "header" {
-              for_each = readiness_probe.value.header != null ? [readiness_probe.value.header] : []
+              for_each = readiness_probe.value.header != null ? readiness_probe.value.header : []
               content {
                 name  = header.value.name
                 value = header.value.value
@@ -74,7 +74,7 @@ resource "azurerm_container_app_job" "container_app_jobs" {
           content {
             failure_count_threshold = startup_probe.value.failure_count_threshold
             dynamic "header" {
-              for_each = startup_probe.value.header != null ? [startup_probe.value.header] : []
+              for_each = startup_probe.value.header != null ? startup_probe.value.header : []
               content {
                 name  = header.value.name
                 value = header.value.value
@@ -90,7 +90,7 @@ resource "azurerm_container_app_job" "container_app_jobs" {
           }
         }
         dynamic "volume_mounts" {
-          for_each = container.value.volume_mounts != null ? [container.value.volume_mounts] : []
+          for_each = container.value.volume_mounts != null ? container.value.volume_mounts : []
           content {
             name     = volume_mounts.value.name
             path     = volume_mounts.value.path
@@ -117,7 +117,7 @@ resource "azurerm_container_app_job" "container_app_jobs" {
         memory = init_container.value.memory
         name   = init_container.value.name
         dynamic "volume_mounts" {
-          for_each = init_container.value.volume_mounts != null ? [init_container.value.volume_mounts] : []
+          for_each = init_container.value.volume_mounts != null ? init_container.value.volume_mounts : []
           content {
             name     = volume_mounts.value.name
             path     = volume_mounts.value.path
@@ -143,13 +143,13 @@ resource "azurerm_container_app_job" "container_app_jobs" {
       parallelism              = event_trigger_config.value.parallelism
       replica_completion_count = event_trigger_config.value.replica_completion_count
       dynamic "scale" {
-        for_each = event_trigger_config.value.scale != null ? [event_trigger_config.value.scale] : []
+        for_each = event_trigger_config.value.scale != null ? event_trigger_config.value.scale : []
         content {
           max_executions              = scale.value.max_executions
           min_executions              = scale.value.min_executions
           polling_interval_in_seconds = scale.value.polling_interval_in_seconds
           dynamic "rules" {
-            for_each = scale.value.rules != null ? [scale.value.rules] : []
+            for_each = scale.value.rules != null ? scale.value.rules : []
             content {
               dynamic "authentication" {
                 for_each = rules.value.authentication != null ? rules.value.authentication : []
@@ -205,7 +205,7 @@ resource "azurerm_container_app_job" "container_app_jobs" {
   }
 
   dynamic "secret" {
-    for_each = each.value.secret != null ? [each.value.secret] : []
+    for_each = each.value.secret != null ? each.value.secret : []
     content {
       identity            = secret.value.identity
       key_vault_secret_id = secret.value.key_vault_secret_id

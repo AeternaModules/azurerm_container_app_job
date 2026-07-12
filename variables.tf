@@ -143,10 +143,10 @@ EOT
         image = string
         liveness_probe = optional(list(object({
           failure_count_threshold = optional(number) # Default: 3
-          header = optional(object({
+          header = optional(list(object({
             name  = string
             value = string
-          }))
+          })))
           host             = optional(string)
           initial_delay    = optional(number) # Default: 1
           interval_seconds = optional(number) # Default: 10
@@ -159,10 +159,10 @@ EOT
         name   = string
         readiness_probe = optional(list(object({
           failure_count_threshold = optional(number) # Default: 3
-          header = optional(object({
+          header = optional(list(object({
             name  = string
             value = string
-          }))
+          })))
           host                    = optional(string)
           initial_delay           = optional(number) # Default: 0
           interval_seconds        = optional(number) # Default: 10
@@ -174,10 +174,10 @@ EOT
         })))
         startup_probe = optional(list(object({
           failure_count_threshold = optional(number) # Default: 3
-          header = optional(object({
+          header = optional(list(object({
             name  = string
             value = string
-          }))
+          })))
           host             = optional(string)
           initial_delay    = optional(number) # Default: 0
           interval_seconds = optional(number) # Default: 10
@@ -186,11 +186,11 @@ EOT
           timeout          = optional(number) # Default: 1
           transport        = string
         })))
-        volume_mounts = optional(object({
+        volume_mounts = optional(list(object({
           name     = string
           path     = string
           sub_path = optional(string)
-        }))
+        })))
       }))
       init_container = optional(list(object({
         args    = optional(list(string))
@@ -204,11 +204,11 @@ EOT
         image  = string
         memory = optional(string)
         name   = string
-        volume_mounts = optional(object({
+        volume_mounts = optional(list(object({
           name     = string
           path     = string
           sub_path = optional(string)
-        }))
+        })))
       })))
       volume = optional(list(object({
         mount_options = optional(string)
@@ -220,11 +220,11 @@ EOT
     event_trigger_config = optional(object({
       parallelism              = optional(number) # Default: 1
       replica_completion_count = optional(number) # Default: 1
-      scale = optional(object({
+      scale = optional(list(object({
         max_executions              = optional(number) # Default: 100
         min_executions              = optional(number) # Default: 0
         polling_interval_in_seconds = optional(number) # Default: 30
-        rules = optional(object({
+        rules = optional(list(object({
           authentication = optional(list(object({
             secret_name       = string
             trigger_parameter = string
@@ -233,8 +233,8 @@ EOT
           identity_id      = optional(string)
           metadata         = map(string)
           name             = string
-        }))
-      }))
+        })))
+      })))
     }))
     identity = optional(object({
       identity_ids = optional(set(string))
@@ -255,12 +255,12 @@ EOT
       parallelism              = optional(number) # Default: 1
       replica_completion_count = optional(number) # Default: 1
     }))
-    secret = optional(object({
+    secret = optional(list(object({
       identity            = optional(string)
       key_vault_secret_id = optional(string)
       name                = string
       value               = optional(string)
-    }))
+    })))
   }))
   validation {
     condition = alltrue([
@@ -329,7 +329,7 @@ EOT
   validation {
     condition = alltrue([
       for k, v in var.container_app_jobs : (
-        v.event_trigger_config.scale.rules.authentication == null || (length(v.event_trigger_config.scale.rules.authentication) >= 1)
+        v.event_trigger_config.scale == null || alltrue([for item in v.event_trigger_config.scale : (item.authentication == null || (length(item.authentication) >= 1))])
       )
     ])
     error_message = "Each authentication list must contain at least 1 items"
