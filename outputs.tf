@@ -1,3 +1,7 @@
+output "container_app_jobs_id" {
+  description = "Map of id values across all container_app_jobs, keyed the same as var.container_app_jobs"
+  value       = { for k, v in azurerm_container_app_job.container_app_jobs : k => v.id }
+}
 output "container_app_jobs_container_app_environment_id" {
   description = "Map of container_app_environment_id values across all container_app_jobs, keyed the same as var.container_app_jobs"
   value       = { for k, v in azurerm_container_app_job.container_app_jobs : k => v.container_app_environment_id }
