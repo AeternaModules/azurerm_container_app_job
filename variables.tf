@@ -142,48 +142,48 @@ EOT
         })))
         image = string
         liveness_probe = optional(list(object({
-          failure_count_threshold = optional(number) # Default: 3
+          failure_count_threshold = optional(number)
           header = optional(list(object({
             name  = string
             value = string
           })))
           host             = optional(string)
-          initial_delay    = optional(number) # Default: 1
-          interval_seconds = optional(number) # Default: 10
+          initial_delay    = optional(number)
+          interval_seconds = optional(number)
           path             = optional(string)
           port             = number
-          timeout          = optional(number) # Default: 1
+          timeout          = optional(number)
           transport        = string
         })))
         memory = string
         name   = string
         readiness_probe = optional(list(object({
-          failure_count_threshold = optional(number) # Default: 3
+          failure_count_threshold = optional(number)
           header = optional(list(object({
             name  = string
             value = string
           })))
           host                    = optional(string)
-          initial_delay           = optional(number) # Default: 0
-          interval_seconds        = optional(number) # Default: 10
+          initial_delay           = optional(number)
+          interval_seconds        = optional(number)
           path                    = optional(string)
           port                    = number
-          success_count_threshold = optional(number) # Default: 3
-          timeout                 = optional(number) # Default: 1
+          success_count_threshold = optional(number)
+          timeout                 = optional(number)
           transport               = string
         })))
         startup_probe = optional(list(object({
-          failure_count_threshold = optional(number) # Default: 3
+          failure_count_threshold = optional(number)
           header = optional(list(object({
             name  = string
             value = string
           })))
           host             = optional(string)
-          initial_delay    = optional(number) # Default: 0
-          interval_seconds = optional(number) # Default: 10
+          initial_delay    = optional(number)
+          interval_seconds = optional(number)
           path             = optional(string)
           port             = number
-          timeout          = optional(number) # Default: 1
+          timeout          = optional(number)
           transport        = string
         })))
         volume_mounts = optional(list(object({
@@ -214,16 +214,16 @@ EOT
         mount_options = optional(string)
         name          = string
         storage_name  = optional(string)
-        storage_type  = optional(string) # Default: "EmptyDir"
+        storage_type  = optional(string)
       })))
     })
     event_trigger_config = optional(object({
-      parallelism              = optional(number) # Default: 1
-      replica_completion_count = optional(number) # Default: 1
+      parallelism              = optional(number)
+      replica_completion_count = optional(number)
       scale = optional(list(object({
-        max_executions              = optional(number) # Default: 100
-        min_executions              = optional(number) # Default: 0
-        polling_interval_in_seconds = optional(number) # Default: 30
+        max_executions              = optional(number)
+        min_executions              = optional(number)
+        polling_interval_in_seconds = optional(number)
         rules = optional(list(object({
           authentication = optional(list(object({
             secret_name       = string
@@ -241,8 +241,8 @@ EOT
       type         = string
     }))
     manual_trigger_config = optional(object({
-      parallelism              = optional(number) # Default: 1
-      replica_completion_count = optional(number) # Default: 1
+      parallelism              = optional(number)
+      replica_completion_count = optional(number)
     }))
     registry = optional(list(object({
       identity             = optional(string)
@@ -252,8 +252,8 @@ EOT
     })))
     schedule_trigger_config = optional(object({
       cron_expression          = string
-      parallelism              = optional(number) # Default: 1
-      replica_completion_count = optional(number) # Default: 1
+      parallelism              = optional(number)
+      replica_completion_count = optional(number)
     }))
     secret = optional(list(object({
       identity            = optional(string)
@@ -269,78 +269,6 @@ EOT
       )
     ])
     error_message = "Each container list must contain at least 1 items"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.container_app_jobs : (
-        alltrue([for item in v.template.container : (item.env == null || (length(item.env) >= 1))])
-      )
-    ])
-    error_message = "Each env list must contain at least 1 items"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.container_app_jobs : (
-        alltrue([for item in v.template.container : (item.liveness_probe == null || (length(item.liveness_probe) >= 1))])
-      )
-    ])
-    error_message = "Each liveness_probe list must contain at least 1 items"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.container_app_jobs : (
-        alltrue([for item in v.template.container : (item.readiness_probe == null || (length(item.readiness_probe) >= 1))])
-      )
-    ])
-    error_message = "Each readiness_probe list must contain at least 1 items"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.container_app_jobs : (
-        alltrue([for item in v.template.container : (item.startup_probe == null || (length(item.startup_probe) >= 1))])
-      )
-    ])
-    error_message = "Each startup_probe list must contain at least 1 items"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.container_app_jobs : (
-        v.template.init_container == null || (length(v.template.init_container) >= 1)
-      )
-    ])
-    error_message = "Each init_container list must contain at least 1 items"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.container_app_jobs : (
-        v.template.init_container == null || alltrue([for item in v.template.init_container : (item.env == null || (length(item.env) >= 1))])
-      )
-    ])
-    error_message = "Each env list must contain at least 1 items"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.container_app_jobs : (
-        v.template.volume == null || (length(v.template.volume) >= 1)
-      )
-    ])
-    error_message = "Each volume list must contain at least 1 items"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.container_app_jobs : (
-        v.event_trigger_config == null || (v.event_trigger_config.scale == null || alltrue([for item in v.event_trigger_config.scale : (item.rules == null || alltrue([for item in item.rules : (item.authentication == null || (length(item.authentication) >= 1))]))]))
-      )
-    ])
-    error_message = "Each authentication list must contain at least 1 items"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.container_app_jobs : (
-        v.registry == null || (length(v.registry) >= 1)
-      )
-    ])
-    error_message = "Each registry list must contain at least 1 items"
   }
 }
 
