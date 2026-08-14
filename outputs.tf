@@ -12,11 +12,11 @@ output "container_app_jobs_event_stream_endpoint" {
 }
 output "container_app_jobs_event_trigger_config" {
   description = "Map of event_trigger_config values across all container_app_jobs, keyed the same as var.container_app_jobs"
-  value       = { for k, v in azurerm_container_app_job.container_app_jobs : k => v.event_trigger_config if v.event_trigger_config != null && length(v.event_trigger_config) > 0 }
+  value       = { for k, v in azurerm_container_app_job.container_app_jobs : k => one(v.event_trigger_config) if v.event_trigger_config != null && length(v.event_trigger_config) > 0 }
 }
 output "container_app_jobs_identity" {
   description = "Map of identity values across all container_app_jobs, keyed the same as var.container_app_jobs"
-  value       = { for k, v in azurerm_container_app_job.container_app_jobs : k => v.identity if v.identity != null && length(v.identity) > 0 }
+  value       = { for k, v in azurerm_container_app_job.container_app_jobs : k => one(v.identity) if v.identity != null && length(v.identity) > 0 }
 }
 output "container_app_jobs_location" {
   description = "Map of location values across all container_app_jobs, keyed the same as var.container_app_jobs"
@@ -24,7 +24,7 @@ output "container_app_jobs_location" {
 }
 output "container_app_jobs_manual_trigger_config" {
   description = "Map of manual_trigger_config values across all container_app_jobs, keyed the same as var.container_app_jobs"
-  value       = { for k, v in azurerm_container_app_job.container_app_jobs : k => v.manual_trigger_config if v.manual_trigger_config != null && length(v.manual_trigger_config) > 0 }
+  value       = { for k, v in azurerm_container_app_job.container_app_jobs : k => one(v.manual_trigger_config) if v.manual_trigger_config != null && length(v.manual_trigger_config) > 0 }
 }
 output "container_app_jobs_name" {
   description = "Map of name values across all container_app_jobs, keyed the same as var.container_app_jobs"
@@ -52,7 +52,7 @@ output "container_app_jobs_resource_group_name" {
 }
 output "container_app_jobs_schedule_trigger_config" {
   description = "Map of schedule_trigger_config values across all container_app_jobs, keyed the same as var.container_app_jobs"
-  value       = { for k, v in azurerm_container_app_job.container_app_jobs : k => v.schedule_trigger_config if v.schedule_trigger_config != null && length(v.schedule_trigger_config) > 0 }
+  value       = { for k, v in azurerm_container_app_job.container_app_jobs : k => one(v.schedule_trigger_config) if v.schedule_trigger_config != null && length(v.schedule_trigger_config) > 0 }
 }
 output "container_app_jobs_secret" {
   description = "Map of secret values across all container_app_jobs, keyed the same as var.container_app_jobs"
@@ -65,7 +65,7 @@ output "container_app_jobs_tags" {
 }
 output "container_app_jobs_template" {
   description = "Map of template values across all container_app_jobs, keyed the same as var.container_app_jobs"
-  value       = { for k, v in azurerm_container_app_job.container_app_jobs : k => v.template if v.template != null && length(v.template) > 0 }
+  value       = { for k, v in azurerm_container_app_job.container_app_jobs : k => one(v.template) if v.template != null && length(v.template) > 0 }
 }
 output "container_app_jobs_workload_profile_name" {
   description = "Map of workload_profile_name values across all container_app_jobs, keyed the same as var.container_app_jobs"
